@@ -1,1 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Biblioteca Virtual</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+<header class="inicio">
+    <h1>Mi Biblioteca Virtual</h1>
+    <p>Un refugio personal de lectura</p>
+</header>
+
+<section class="controles">
+    <input type="text" id="buscador" placeholder="Buscar libro...">
+
+    <select id="categoriaFiltro">
+        <option value="todos">Todas</option>
+        <option value="contabilidad">Contabilidad</option>
+        <option value="economia">Economía</option>
+        <option value="literatura">Literatura</option>
+        <option value="otros">Otros</option>
+    </select>
+
+    <input type="file" id="subirPdf" accept="application/pdf">
+</section>
+
+<section class="biblioteca">
+
+    <h2>📘 Contabilidad</h2>
+    <div class="estante" data-categoria="contabilidad"></div>
+
+    <h2>📗 Economía</h2>
+    <div class="estante" data-categoria="economia"></div>
+
+    <h2>📕 Literatura</h2>
+    <div class="estante" data-categoria="literatura"></div>
+
+    <h2>📙 Otros</h2>
+    <div class="estante" data-categoria="otros"></div>
+
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
 
