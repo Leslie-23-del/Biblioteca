@@ -1,29 +1,265 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Biblioteca Virtual</title>
-    <link rel="stylesheet" href="estilos.css">
+  <meta charset="UTF-8" />
+  <title>Biblioteca Clásica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Libre+Baskerville&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Libre Baskerville', serif;
+      background: linear-gradient(180deg, #2b1d12, #1a120b);
+      color: #f5f1ea;
+      overflow-x: hidden;
+    }
+    header {
+      background: #3a2616;
+      padding: 2rem;
+      text-align: center;
+      border-bottom: 4px solid #c9a35d;
+    }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      margin: 0;
+      color: #f1e4c3;
+    }
+    header p {
+      margin-top: 0.5rem;
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    main {
+      padding: 3rem 2rem;
+      max-width: 1200px;
+      margin: auto;
+      position: relative;
+    }
+
+    .avatar {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      width: 40px;
+      height: 60px;
+      background: #c9a35d;
+      border-radius: 20px 20px 10px 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+      transform: translateX(-50%);
+      z-index: 1000;
+    }
+    .avatar::after {
+      content: '';
+      position: absolute;
+      top: -18px;
+      left: 6px;
+      width: 28px;
+      height: 28px;
+      background: #f1e4c3;
+      border-radius: 50%;
+    }
+
+    .biblioteca {
+      perspective: 1200px;
+      margin-top: 4rem;
+    }
+
+    .sala-central {
+      position: relative;
+      background: linear-gradient(180deg, #3b2616, #1a120b);
+      border-radius: 20px;
+      padding: 6rem 2rem;
+      box-shadow: inset 0 0 60px rgba(0,0,0,0.7);
+      transform-style: preserve-3d;
+      transition: transform 0.2s ease-out;
+    }
+
+    .alfombra {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 180px;
+      height: 100%;
+      background: linear-gradient(180deg, #7b1f1f, #4a0f0f);
+      opacity: 0.6;
+      border-radius: 20px;
+    }
+
+    .pasillo-horizontal {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      gap: 3rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .estante.lateral {
+      width: 45%;
+    }
+
+    .estante h2 {
+      font-family: 'Playfair Display', serif;
+      color: #e6d3a3;
+      margin-bottom: 1.5rem;
+    }
+    .libros {
+      display: flex;
+      flex-direction: column; /* ESTANTES VERTICALES */
+      gap: 14px;
+      align-items: center;
+      background: #2a1b10;
+      padding: 2rem 1rem;
+      border-radius: 12px;
+      box-shadow: inset -8px 0 0 #1a120b;
+      overflow-y: auto;
+      height: 420px; /* altura del estante */
+    }
+    .libro {
+      writing-mode: horizontal-tb; /* texto normal */
+      background: linear-gradient(180deg, #7b4a1f, #4a2c12);
+      color: #f1e4c3;
+      padding: 0.6rem 0.8rem;
+      height: 36px;
+      width: 160px;
+      text-align: left;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .libro:hover {
+      transform: translateX(12px) scale(1.03);
+      background: linear-gradient(180deg, #c9a35d, #8a5a2b);
+      color: #2b1d12;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background: #1a120b;
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-contenido {
+      background: #2f2014;
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+    }
+    .cerrar {
+      margin-top: 1.5rem;
+      padding: 0.6rem 1.4rem;
+      border: none;
+      border-radius: 20px;
+      background: #c9a35d;
+      color: #2b1d12;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
 </head>
+<body>
 
-<body class="inicio-victoriano">
-
-<header class="header-biblioteca">
-    <h1>Biblioteca Virtual</h1>
-    <input type="text" class="buscador" placeholder="Buscar un libro...">
-</header>
-
-<section class="zona-estante">
-    <div class="estante">
-        <div class="libro libro1"></div>
-        <div class="libro libro2"></div>
-        <div class="libro libro3"></div>
-        <div class="libro libro4"></div>
-        <div class="libro libro5"></div>
-        <div class="libro libro6"></div>
+  <div class="modal" id="modalLibro">
+    <div class="modal-contenido">
+      <h3 id="modalTitulo"></h3>
+      <p id="modalTexto"></p>
+      <button class="cerrar" onclick="cerrarLibro()">Cerrar libro</button>
     </div>
-</section>
+  </div>
 
+  <div class="avatar" id="avatar"></div>
+
+  <header>
+    <h1>Biblioteca Clásica</h1>
+    <p>Conocimiento, historia y sabiduría preservados en el tiempo</p>
+  </header>
+
+  <main>
+    <section class="biblioteca">
+      <div class="sala-central">
+        <div class="alfombra"></div>
+        <div class="pasillo-horizontal">
+          <div class="estante lateral">
+            <h2>Filosofía</h2>
+            <div class="libros">
+              <div class="libro" onclick="abrirLibro('Platón','Reflexiones sobre las ideas, la verdad y el alma.')">Platón</div>
+              <div class="libro" onclick="abrirLibro('Aristóteles','Pensamiento lógico, ética y naturaleza del conocimiento.')">Aristóteles</div>
+              <div class="libro" onclick="abrirLibro('Sócrates','Diálogos y búsqueda de la verdad.')">Sócrates</div>
+            </div>
+          </div>
+          <div class="estante lateral">
+            <h2>Ciencia</h2>
+            <div class="libros">
+              <div class="libro">Astro</div>
+              <div class="libro">Mate</div>
+              <div class="libro">Física</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2026 Biblioteca Clásica · Proyecto personal</footer>
+
+  <script>
+    const avatar = document.getElementById('avatar');
+    const sala = document.querySelector('.sala-central');
+    let posX = window.innerWidth / 2;
+    let posY = window.innerHeight - 100;
+
+    document.addEventListener('keydown', (e) => {
+      const step = 15;
+      if (e.key === 'ArrowLeft') posX -= step;
+      if (e.key === 'ArrowRight') posX += step;
+      if (e.key === 'ArrowUp') posY -= step;
+      if (e.key === 'ArrowDown') posY += step;
+
+      posX = Math.max(0, Math.min(window.innerWidth - 40, posX));
+      posY = Math.max(0, Math.min(window.innerHeight - 60, posY));
+
+      const centroPantalla = window.innerWidth / 2;
+      if (Math.abs(posX - centroPantalla) < 80) {
+        posX += (centroPantalla - posX) * 0.15;
+      }
+
+      avatar.style.left = posX + 'px';
+      avatar.style.top = posY + 'px';
+
+      const depth = Math.max(0, window.innerHeight - posY);
+      const offsetX = (posX - centroPantalla) * 0.15;
+      sala.style.transform = `translateX(${-offsetX}px) translateZ(${depth * 0.4}px) rotateX(${depth * 0.02}deg)`;
+    });
+
+    function abrirLibro(titulo, texto) {
+      document.getElementById('modalTitulo').innerText = titulo;
+      document.getElementById('modalTexto').innerText = texto;
+      document.getElementById('modalLibro').style.display = 'flex';
+    }
+
+    function cerrarLibro() {
+      document.getElementById('modalLibro').style.display = 'none';
+    }
+  </script>
 </body>
 </html>
-
