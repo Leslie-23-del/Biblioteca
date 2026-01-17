@@ -117,6 +117,36 @@
       color: #f1e4c3;
     }
   </style>
+<script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
+<script>
+  let libroActual = null;
+
+  function cargarEpub(input) {
+    const archivo = input.files[0];
+    if (!archivo) return;
+
+    const area = document.getElementById('lector');
+    area.innerHTML = "";
+
+    libroActual = ePub(archivo);
+    const vista = libroActual.renderTo('lector', {
+      width: '100%',
+      height: '600px'
+    });
+    vista.display();
+  }
+
+  document.addEventListener('click', e => {
+    if (e.target.classList.contains('libro')) {
+      document.getElementById('modal').style.display = 'flex';
+    }
+  });
+
+  function cerrarLector() {
+    document.getElementById('modal').style.display = 'none';
+    document.getElementById('lector').innerHTML = "";
+  }
+</script>
 </head>
 <body>
   <header>
@@ -125,6 +155,10 @@
   </header>
 
   <main>
+  <div style="margin-bottom:2rem;">
+    <label style="font-style:italic;">Cargar libro EPUB:</label><br>
+    <input type="file" accept=".epub" onchange="cargarEpub(this)">
+  </div>
   <section class="buscador">
     <input type="text" id="buscar" placeholder="Buscar libro o área…" onkeyup="filtrarLibros()">
   </section>
@@ -195,6 +229,12 @@
   <footer>
     © 2026 Biblioteca Clásica · Proyecto académico
   </footer>
+<div id="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);justify-content:center;align-items:center;z-index:999;">
+  <div style="background:#1a120b;width:80%;max-width:900px;padding:1rem;border-radius:12px;">
+    <button onclick="cerrarLector()" style="float:right;background:#c9a35d;border:none;padding:.5rem 1rem;cursor:pointer;">Cerrar</button>
+    <div id="lector" style="margin-top:2rem;"></div>
+  </div>
+</div>
 </body>
 </html>
 
