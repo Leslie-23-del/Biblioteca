@@ -35,11 +35,10 @@
       margin: auto;
     }
 
-    /* ESTANTE */
     .estante h2 {
       font-family: 'Playfair Display', serif;
       color: #e6d3a3;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
     .libros {
       display: flex;
@@ -53,7 +52,6 @@
     }
     .libro {
       writing-mode: vertical-rl;
-      text-orientation: mixed;
       background: linear-gradient(180deg, #7b4a1f, #4a2c12);
       color: #f1e4c3;
       padding: 1rem 0.5rem;
@@ -70,32 +68,6 @@
       transform: translateY(-10px);
       background: linear-gradient(180deg, #c9a35d, #8a5a2b);
       color: #2b1d12;
-    }
-
-    .galeria {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-      margin-top: 3rem;
-    }
-    .card {
-      background: #2f2014;
-      border-radius: 12px;
-      padding: 1.8rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-      transition: transform 0.3s ease;
-    }
-    .card:hover {
-      transform: translateY(-6px);
-    }
-    .card h2 {
-      font-family: 'Playfair Display', serif;
-      margin-top: 0;
-      color: #e6d3a3;
-    }
-    .card p {
-      font-size: 0.95rem;
-      line-height: 1.6;
     }
     footer {
       text-align: center;
@@ -117,36 +89,36 @@
       color: #f1e4c3;
     }
   </style>
-<script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
-<script>
-  let libroActual = null;
+  <script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
+  <script>
+    let libroActual = null;
 
-  function cargarEpub(input) {
-    const archivo = input.files[0];
-    if (!archivo) return;
+    function cargarEpub(input) {
+      const archivo = input.files[0];
+      if (!archivo) return;
 
-    const area = document.getElementById('lector');
-    area.innerHTML = "";
+      const area = document.getElementById('lector');
+      area.innerHTML = "";
 
-    libroActual = ePub(archivo);
-    const vista = libroActual.renderTo('lector', {
-      width: '100%',
-      height: '600px'
-    });
-    vista.display();
-  }
-
-  document.addEventListener('click', e => {
-    if (e.target.classList.contains('libro')) {
-      document.getElementById('modal').style.display = 'flex';
+      libroActual = ePub(archivo);
+      const vista = libroActual.renderTo('lector', {
+        width: '100%',
+        height: '600px'
+      });
+      vista.display();
     }
-  });
 
-  function cerrarLector() {
-    document.getElementById('modal').style.display = 'none';
-    document.getElementById('lector').innerHTML = "";
-  }
-</script>
+    document.addEventListener('click', e => {
+      if (e.target.classList.contains('libro')) {
+        document.getElementById('modal').style.display = 'flex';
+      }
+    });
+
+    function cerrarLector() {
+      document.getElementById('modal').style.display = 'none';
+      document.getElementById('lector').innerHTML = "";
+    }
+  </script>
 </head>
 <body>
   <header>
@@ -155,86 +127,75 @@
   </header>
 
   <main>
-  <div style="margin-bottom:2rem;">
-    <label style="font-style:italic;">Cargar libro EPUB:</label><br>
-    <input type="file" accept=".epub" onchange="cargarEpub(this)">
-  </div>
-  <section class="buscador">
-    <input type="text" id="buscar" placeholder="Buscar libro o área…" onkeyup="filtrarLibros()">
-  </section>
-
-  <section class="biblioteca">
-    
+    <div style="margin-bottom:2rem;">
+      <label style="font-style:italic;">Cargar libro EPUB:</label><br>
+      <input type="file" accept=".epub" onchange="cargarEpub(this)">
     </div>
 
-    
-    </div>
-
-    <div class="estante">
-      <h2>Romance</h2>
-      <div class="libros">
-        <div class="libro">Romance oscuro</div>
-        <div class="libro">Belleza oscura</div>
-        <div class="libro">Amor tóxico</div>
-        <div class="libro">Deseo prohibido</div>
-        <div class="libro">Sombras</div>
-        <div class="libro">Drama</div>
-        <div class="libro">Pasión</div>
+    <section class="biblioteca">
+      <div class="estante">
+        <h2>Romance</h2>
+        <div class="libros">
+          <div class="libro">Romance oscuro</div>
+          <div class="libro">Belleza oscura</div>
+          <div class="libro">Amor tóxico</div>
+          <div class="libro">Deseo prohibido</div>
+          <div class="libro">Sombras</div>
+          <div class="libro">Drama</div>
+          <div class="libro">Pasión</div>
+        </div>
       </div>
-    </div>
-    </div>
 
-    <div class="estante">
-      <h2>Acción</h2>
-      <div class="libros">
-        <div class="libro">Aventura</div>
-        <div class="libro">Batallas</div>
-        <div class="libro">Héroes</div>
-        <div class="libro">Misiones</div>
-        <div class="libro">Suspenso</div>
+      <div class="estante">
+        <h2>Acción</h2>
+        <div class="libros">
+          <div class="libro">Aventura</div>
+          <div class="libro">Batallas</div>
+          <div class="libro">Héroes</div>
+          <div class="libro">Misiones</div>
+          <div class="libro">Suspenso</div>
+        </div>
       </div>
-    </div>
 
-    <div class="estante">
-      <h2>Fantasía</h2>
-      <div class="libros">
-        <div class="libro">Magia</div>
-        <div class="libro">Reinos</div>
-        <div class="libro">Dragones</div>
-        <div class="libro">Épico</div>
-        <div class="libro">Leyendas</div>
+      <div class="estante">
+        <h2>Fantasía</h2>
+        <div class="libros">
+          <div class="libro">Magia</div>
+          <div class="libro">Reinos</div>
+          <div class="libro">Dragones</div>
+          <div class="libro">Épico</div>
+          <div class="libro">Leyendas</div>
+        </div>
       </div>
-    </div>
 
-    <div class="estante">
-      <h2>Terror</h2>
-      <div class="libros">
-        <div class="libro">Horror</div>
-        <div class="libro">Oscuro</div>
-        <div class="libro">Suspenso</div>
-        <div class="libro">Misterio</div>
-        <div class="libro">Sobrenatural</div>
+      <div class="estante">
+        <h2>Terror</h2>
+        <div class="libros">
+          <div class="libro">Horror</div>
+          <div class="libro">Oscuro</div>
+          <div class="libro">Suspenso</div>
+          <div class="libro">Misterio</div>
+          <div class="libro">Sobrenatural</div>
+        </div>
       </div>
-    </div>
+    </section>
 
-    
+    <div class="globo">
+      <span>“Camina, observa y elige el conocimiento que buscas”</span>
     </div>
-  </section>
-
-  <div class="globo">
-    <span>“Camina, observa y elige el conocimiento que buscas”</span>
-  </div>
-</main>
+  </main>
 
   <footer>
-    © 2026 Biblioteca Clásica · Proyecto académico
+    © 2026 Biblioteca Clásica · Proyecto personal
   </footer>
-<div id="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);justify-content:center;align-items:center;z-index:999;">
-  <div style="background:#1a120b;width:80%;max-width:900px;padding:1rem;border-radius:12px;">
-    <button onclick="cerrarLector()" style="float:right;background:#c9a35d;border:none;padding:.5rem 1rem;cursor:pointer;">Cerrar</button>
-    <div id="lector" style="margin-top:2rem;"></div>
+
+  <div id="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);justify-content:center;align-items:center;z-index:999;">
+    <div style="background:#1a120b;width:80%;max-width:900px;padding:1rem;border-radius:12px;">
+      <button onclick="cerrarLector()" style="float:right;background:#c9a35d;border:none;padding:.5rem 1rem;cursor:pointer;">Cerrar</button>
+      <div id="lector" style="margin-top:2rem;"></div>
+    </div>
   </div>
-</div>
 </body>
 </html>
+
 
