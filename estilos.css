@@ -92,3 +92,61 @@ body.inicio-victoriano {
     border-radius: 4px;
     cursor: pointer;
 }
+/* ----- BIBLIOTECA ----- */
+
+.header-biblioteca {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.buscador {
+    width: 60%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #7a5c3e;
+    background-color: #fdf8f2;
+    font-family: 'Playfair Display', serif;
+}
+
+/* ----- ESTANTE ----- */
+
+.zona-estante {
+    display: flex;
+    justify-content: center;
+}
+
+.estante {
+    background: linear-gradient(#7a4a2e, #5c3a21);
+    padding: 30px 20px 15px;
+    display: flex;
+    gap: 18px;
+    border-radius: 6px;
+    box-shadow: inset 0 -8px 0 #3e2616;
+}
+
+/* ----- LIBROS ----- */
+
+.libro {
+    width: 55px;
+    height: 190px;
+    border-radius: 4px;
+    box-shadow:
+        inset -3px 0 0 rgba(255,255,255,0.2),
+        2px 4px 6px rgba(0,0,0,0.4);
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.libro:hover {
+    transform: translateY(-10px);
+}
+
+/* COLORES DE LIBROS */
+
+.libro1 { background: linear-gradient(#6b1e1e, #3a0f0f); }
+.libro2 { background: linear-gradient(#1e3a5f, #0f1f33); }
+.libro3 { background: linear-gradient(#4f5b2f, #2a2f18); }
+.libro4 { background: linear-gradient(#5c3a21, #3a2415); }
+.libro5 { background: linear-gradient(#4b2e4f, #2a1830); }
+.libro6 { background: linear-gradient(#7a5c3e, #4b3621); }
+
