@@ -97,20 +97,30 @@
     function cargarEpub(input) {
       const archivo = input.files[0];
       if (!archivo) return;
-
-    document.getElementById('modal').style.display = 'flex';
+      
+      document.getElementById('modal').style.display = 'flex';
       
       const area = document.getElementById('lector');
-      area.innerHTML = "";
+      area.innerHTML = "<p style='color:#000;text-align:center;'>Cargando libro...</p>";
 
       const url = URL.createObjectURL(archivo);
 
-      libroActual = ePub(url);
+      libroActual = ePub(url, {
+        openAs: "epub"
+      });
+
       vista = libroActual.renderTo('lector', {
         width: '100%',
-        height: '70vh'
+        height: '70vh',
+        allowScriptedContent: true
       });
-      vista.display();
+
+      libroActual.ready.then(() => {
+        vista.display();
+      }).catch(err => {
+        area.innerHTML = "<p style='color:red'>Error al cargar EPUB</p>";
+        console.error(err);
+      });
     }
     
     function cerrarLector() {
