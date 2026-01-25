@@ -103,23 +103,22 @@
       const area = document.getElementById('lector');
       area.innerHTML = "";
 
-      libroActual = ePub(archivo);
-      const vista = libroActual.renderTo('lector', {
+      const url = URL.createObjectURL(archivo);
+
+      libroActual = ePub(url);
+      vista = libroActual.renderTo('lector', {
         width: '100%',
-        height: '600px'
+        height: '70vh'
       });
       vista.display();
     }
-
-    document.addEventListener('click', e => {
-      if (e.target.classList.contains('libro')) {
-        document.getElementById('modal').style.display = 'flex';
-      }
-    });
-
+    
     function cerrarLector() {
       document.getElementById('modal').style.display = 'none';
       document.getElementById('lector').innerHTML = "";
+      if (libroActual) {
+        libroActual.destoy();
+        libroActual = null;
     }
   </script>
 </head>
