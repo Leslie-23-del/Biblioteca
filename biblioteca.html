@@ -1,124 +1,99 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Biblioteca Clásica</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<title>Biblioteca Clásica</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Libre+Baskerville&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Libre+Baskerville&display=swap" rel="stylesheet">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Libre Baskerville', serif;
-      background: linear-gradient(180deg, #2b1d12, #1a120b);
-      color: #f5f1ea;
-    }
-    header {
-      background: #3a2616;
-      padding: 2rem;
-      text-align: center;
-      border-bottom: 4px solid #c9a35d;
-    }
-    header h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.8rem;
-      margin: 0;
-      color: #f1e4c3;
-    }
-    main {
-      padding: 3rem 2rem;
-      max-width: 1200px;
-      margin: auto;
-    }
-    .libros {
-      display: flex;
-      gap: 10px;
-      background: #2a1b10;
-      padding: 1.5rem;
-      border-radius: 12px;
-      overflow-x: auto;
-    }
-    .libro {
-      writing-mode: vertical-rl;
-      background: linear-gradient(180deg, #7b4a1f, #4a2c12);
-      color: #f1e4c3;
-      padding: 1rem 0.5rem;
-      height: 180px;
-      width: 40px;
-      text-align: center;
-      cursor: pointer;
-      transition: transform .3s;
-    }
-    .libro:hover {
-      transform: translateY(-6px);
-    }
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      background: #1a120b;
-      font-size: 0.85rem;
-      opacity: 0.8;
-    }
-  </style>
+<script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
 
-  <script>
-    let libroActual = null;
-    let vista = null;
-    let epubCargado = false;
-    let epubURL = null;
+<style>
+body{
+  margin:0;
+  font-family:'Libre Baskerville', serif;
+  background:linear-gradient(180deg,#2b1d12,#1a120b);
+  color:#f5f1ea;
+}
 
-    function cargarEpub(input) {
-      const archivo = input.files[0];
-      if (!archivo) return;
+header{
+  background:#3a2616;
+  padding:2rem;
+  text-align:center;
+  border-bottom:4px solid #c9a35d;
+}
 
-      if (epubURL) {
-        URL.revokeObjectURL(epubURL);
-      }
+header h1{
+  font-family:'Playfair Display', serif;
+  font-size:2.8rem;
+  color:#f1e4c3;
+}
 
-      epubURL = URL.createObjectURL(archivo);
-      libroActual = ePub(epubURL);
+main{
+  padding:3rem 2rem;
+  max-width:1200px;
+  margin:auto;
+}
 
-      epubCargado = true;
-      vista = null;
+.estante h2{
+  font-family:'Playfair Display', serif;
+  color:#e6d3a3;
+}
 
-      document.getElementById("estado").innerText =
-        "EPUB cargado correctamente. Haz clic en un libro para abrirlo.";
-    }
+.libros{
+  display:flex;
+  gap:10px;
+  background:#2a1b10;
+  padding:1.5rem;
+  border-radius:12px;
+  overflow-x:auto;
+}
 
-    function abrirLibro() {
-      if (!epubCargado || !libroActual) {
-        alert("Primero carga un archivo EPUB");
-        return;
-      }
+.libro{
+  writing-mode:vertical-rl;
+  background:linear-gradient(180deg,#7b4a1f,#4a2c12);
+  color:#f1e4c3;
+  padding:1rem .5rem;
+  height:180px;
+  width:40px;
+  text-align:center;
+  border-radius:6px;
+  cursor:pointer;
+  transition:.3s;
+}
 
-      document.getElementById("modal").style.display = "flex";
+.libro:hover{
+  transform:translateY(-10px);
+  background:linear-gradient(180deg,#c9a35d,#8a5a2b);
+  color:#2b1d12;
+}
 
-      if (!vista) {
-        vista = libroActual.renderTo("lector", {
-          width: "100%",
-          height: "70vh"
-        });
+/* MODAL */
+#modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
 
-        libroActual.loaded.spine.then(() => {
-          vista.display();
-        });
-      }
-    }
+#contenedor{
+  background:#1a120b;
+  width:80%;
+  max-width:900px;
+  padding:1rem;
+  border-radius:12px;
+}
 
-    function cerrarLector() {
-      document.getElementById("modal").style.display = "none";
-    }
-
-    function siguiente() {
-      if (vista) vista.next();
-    }
-
-    function anterior() {
-      if (vista) vista.prev();
-    }
-  </script>
+#lector{
+  margin-top:1rem;
+  height:70vh;
+  background:#fff;
+}
+</style>
 </head>
 
 <body>
@@ -129,52 +104,67 @@
 </header>
 
 <main>
-  <label>Cargar libro EPUB:</label><br>
-  <input type="file" accept=".epub" onchange="cargarEpub(this)">
-
-  <p id="estado" style="margin-top:1rem;font-style:italic;">
-    Ningún EPUB cargado.
-  </p>
-
-  <h2>Romance</h2>
-  <div class="libros">
-    <div class="libro" onclick="abrirLibro()">Romance oscuro</div>
-    <div class="libro" onclick="abrirLibro()">Belleza oscura</div>
-    <div class="libro" onclick="abrirLibro()">Amor tóxico</div>
-    <div class="libro" onclick="abrirLibro()">Deseo prohibido</div>
-  </div>
+  <section class="estante">
+    <h2>Romance</h2>
+    <div class="libros">
+      <div class="libro" onclick="abrirLibro('epubs/romance.epub')">Romance oscuro</div>
+      <div class="libro" onclick="abrirLibro('epubs/belleza.epub')">Belleza oscura</div>
+    </div>
+  </section>
 </main>
 
-<footer>
-  © 2026 Biblioteca Clásica · Proyecto personal
-</footer>
-
-<div id="modal" style="
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.85);
-  justify-content:center;
-  align-items:center;
-  z-index:999;
-">
-  <div style="
-    background:#ffffff;
-    width:80%;
-    max-width:900px;
-    padding:1rem;
-    border-radius:12px;
-    color:#000;
-  ">
-    <button onclick="cerrarLector()">Cerrar</button>
-    <button onclick="anterior()">◀</button>
-    <button onclick="siguiente()">▶</button>
-
-    <div id="lector"
-         style="margin-top:1rem;height:70vh;overflow:hidden;">
-    </div>
+<!-- MODAL EPUB -->
+<div id="modal">
+  <div id="contenedor">
+    <button onclick="cerrar()">Cerrar</button>
+    <button onclick="prev()">◀</button>
+    <button onclick="next()">▶</button>
+    <div id="lector"></div>
   </div>
 </div>
+
+<script>
+let book = null;
+let rendition = null;
+
+function abrirLibro(ruta){
+  // 1️⃣ Mostrar modal ANTES
+  document.getElementById("modal").style.display = "flex";
+
+  // 2️⃣ Limpiar lector
+  document.getElementById("lector").innerHTML = "";
+
+  // 3️⃣ Crear libro
+  book = ePub(ruta);
+
+  // 4️⃣ Renderizar con contenedor visible
+  rendition = book.renderTo("lector", {
+    width: "100%",
+    height: "100%"
+  });
+
+  // 5️⃣ Mostrar contenido
+  book.ready.then(() => {
+    rendition.display();
+  });
+}
+
+function cerrar(){
+  document.getElementById("modal").style.display = "none";
+  if(book){
+    book.destroy(); // ✅ corregido
+    book = null;
+  }
+}
+
+function next(){
+  if(rendition) rendition.next();
+}
+
+function prev(){
+  if(rendition) rendition.prev();
+}
+</script>
 
 </body>
 </html>
