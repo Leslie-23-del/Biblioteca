@@ -4,7 +4,11 @@
   <meta charset="UTF-8" />
   <title>Biblioteca Clásica</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Libre+Baskerville&display=swap" rel="stylesheet">
+
+  <script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
+
   <style>
     body {
       margin: 0;
@@ -12,44 +16,36 @@
       background: linear-gradient(180deg, #2b1d12, #1a120b);
       color: #f5f1ea;
     }
+
     header {
       background: #3a2616;
       padding: 2rem;
       text-align: center;
       border-bottom: 4px solid #c9a35d;
     }
+
     header h1 {
       font-family: 'Playfair Display', serif;
       font-size: 2.8rem;
       margin: 0;
       color: #f1e4c3;
     }
-    header p {
-      margin-top: 0.5rem;
-      font-size: 1.1rem;
-      opacity: 0.9;
-    }
+
     main {
       padding: 3rem 2rem;
       max-width: 1200px;
       margin: auto;
     }
 
-    .estante h2 {
-      font-family: 'Playfair Display', serif;
-      color: #e6d3a3;
-      margin-bottom: 1rem;
-    }
     .libros {
       display: flex;
       gap: 10px;
-      align-items: flex-end;
       background: #2a1b10;
       padding: 1.5rem;
       border-radius: 12px;
-      box-shadow: inset 0 -8px 0 #1a120b;
       overflow-x: auto;
     }
+
     .libro {
       writing-mode: vertical-rl;
       background: linear-gradient(180deg, #7b4a1f, #4a2c12);
@@ -58,17 +54,9 @@
       height: 180px;
       width: 40px;
       text-align: center;
-      font-size: 0.85rem;
-      border-radius: 6px 6px 2px 2px;
       cursor: pointer;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.4);
-      transition: transform 0.3s ease, background 0.3s ease;
     }
-    .libro:hover {
-      transform: translateY(-10px);
-      background: linear-gradient(180deg, #c9a35d, #8a5a2b);
-      color: #2b1d12;
-    }
+
     footer {
       text-align: center;
       padding: 1.5rem;
@@ -76,20 +64,8 @@
       font-size: 0.85rem;
       opacity: 0.8;
     }
-    .globo {
-      margin-top: 3rem;
-      text-align: center;
-    }
-    .globo span {
-      display: inline-block;
-      padding: 1rem 2rem;
-      border: 2px solid #c9a35d;
-      border-radius: 50px;
-      font-style: italic;
-      color: #f1e4c3;
-    }
   </style>
-  <script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
+
   <script>
     let libroActual = null;
     let vista = null;
@@ -97,117 +73,92 @@
     function cargarEpub(input) {
       const archivo = input.files[0];
       if (!archivo) return;
-      
-      document.getElementById('modal').style.display = 'flex';
-      
-      const area = document.getElementById('lector');
-      area.innerHTML = "<p style='color:#000;text-align:center;'>Cargando libro...</p>";
+
+      document.getElementById("modal").style.display = "flex";
+
+      const lector = document.getElementById("lector");
+      lector.innerHTML = "Cargando libro...";
 
       const url = URL.createObjectURL(archivo);
 
-      libroActual = ePub(url, {
-        openAs: "epub"
+      libroActual = ePub(url);
+
+      vista = libroActual.renderTo("lector", {
+        width: "100%",
+        height: "70vh"
       });
 
-      vista = libroActual.renderTo('lector', {
-        width: '100%',
-        height: '70vh',
-        allowScriptedContent: true
-      });
-
-      libroActual.ready.then(() => {
+      libroActual.loaded.spine.then(() => {
         vista.display();
       }).catch(err => {
-        area.innerHTML = "<p style='color:red'>Error al cargar EPUB</p>";
+        lector.innerHTML = "Error al cargar EPUB";
         console.error(err);
       });
     }
-    
+
     function cerrarLector() {
-      document.getElementById('modal').style.display = 'none';
-      document.getElementById('lector').innerHTML = "";
+      document.getElementById("modal").style.display = "none";
+      document.getElementById("lector").innerHTML = "";
+
       if (libroActual) {
-        libroActual.destoy();
+        libroActual.destroy();
         libroActual = null;
+        vista = null;
+      }
+    }
+
+    function siguiente() {
+      if (vista) vista.next();
+    }
+
+    function anterior() {
+      if (vista) vista.prev();
     }
   </script>
 </head>
+
 <body>
-  <header>
-    <h1>Biblioteca Clásica</h1>
-    <p>Conocimiento, historia y sabiduría preservados en el tiempo</p>
-  </header>
 
-  <main>
-    <div style="margin-bottom:2rem;">
-      <label style="font-style:italic;">Cargar libro EPUB:</label><br>
-      <input type="file" accept=".epub" onchange="cargarEpub(this)">
-    </div>
+<header>
+  <h1>Biblioteca Clásica</h1>
+  <p>Conocimiento, historia y sabiduría preservados en el tiempo</p>
+</header>
 
-    <section class="biblioteca">
-      <div class="estante">
-        <h2>Romance</h2>
-        <div class="libros">
-          <div class="libro">Romance oscuro</div>
-          <div class="libro">Belleza oscura</div>
-          <div class="libro">Amor tóxico</div>
-          <div class="libro">Deseo prohibido</div>
-          <div class="libro">Sombras</div>
-          <div class="libro">Drama</div>
-          <div class="libro">Pasión</div>
-        </div>
-      </div>
+<main>
+  <label>Cargar libro EPUB:</label><br>
+  <input type="file" accept=".epub" onchange="cargarEpub(this)">
+</main>
 
-      <div class="estante">
-        <h2>Acción</h2>
-        <div class="libros">
-          <div class="libro">Aventura</div>
-          <div class="libro">Batallas</div>
-          <div class="libro">Héroes</div>
-          <div class="libro">Misiones</div>
-          <div class="libro">Suspenso</div>
-        </div>
-      </div>
+<footer>
+  © 2026 Biblioteca Clásica
+</footer>
 
-      <div class="estante">
-        <h2>Fantasía</h2>
-        <div class="libros">
-          <div class="libro">Magia</div>
-          <div class="libro">Reinos</div>
-          <div class="libro">Dragones</div>
-          <div class="libro">Épico</div>
-          <div class="libro">Leyendas</div>
-        </div>
-      </div>
+<div id="modal" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+">
+  <div style="
+    background:#ffffff;
+    width:80%;
+    max-width:900px;
+    padding:1rem;
+    border-radius:12px;
+    color:#000;
+  ">
+    <button onclick="cerrarLector()">Cerrar</button>
+    <button onclick="anterior()">◀</button>
+    <button onclick="siguiente()">▶</button>
 
-      <div class="estante">
-        <h2>Terror</h2>
-        <div class="libros">
-          <div class="libro">Horror</div>
-          <div class="libro">Oscuro</div>
-          <div class="libro">Suspenso</div>
-          <div class="libro">Misterio</div>
-          <div class="libro">Sobrenatural</div>
-        </div>
-      </div>
-    </section>
-
-    <div class="globo">
-      <span>“Camina, observa y elige el conocimiento que buscas”</span>
-    </div>
-  </main>
-
-  <footer>
-    © 2026 Biblioteca Clásica · Proyecto personal
-  </footer>
-
-  <div id="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);justify-content:center;align-items:center;z-index:999;">
-    <div style="background:#1a120b;width:80%;max-width:900px;padding:1rem;border-radius:12px;">
-      <button onclick="cerrarLector()" style="float:right;background:#c9a35d;border:none;padding:.5rem 1rem;cursor:pointer;">Cerrar</button>
-      <div id="lector" style="margin-top:2rem;"></div>
+    <div id="lector"
+         style="margin-top:1rem;height:70vh;overflow:hidden;">
     </div>
   </div>
+</div>
+
 </body>
 </html>
-
-
