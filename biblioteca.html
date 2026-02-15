@@ -128,7 +128,6 @@ iframe{
 
 <div id="biblioteca"></div>
 
-<iframe id="visorPDF"></iframe>
 
 </main>
 
@@ -170,7 +169,8 @@ function renderizar(){
       divLibro.className = "libro";
       divLibro.textContent = libro.nombre;
       divLibro.onclick = ()=>{
-        document.getElementById("visorPDF").src = libro.url;
+        localStorage.setItem("pdfSeleccionado", libro.url);
+        window.open("lector.html", "_blank");
       };
       divLibros.appendChild(divLibro);
     });
