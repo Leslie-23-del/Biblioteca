@@ -31,88 +31,116 @@
       color: #f1e4c3;
     }
 
+    header p {
+      margin-top: .5rem;
+      opacity: .9;
+    }
+
     main {
       padding: 3rem 2rem;
       max-width: 1200px;
       margin: auto;
     }
 
+    .estante h2 {
+      font-family: 'Playfair Display', serif;
+      color: #e6d3a3;
+    }
+
     .libros {
       display: flex;
       gap: 10px;
+      align-items: flex-end;
       background: #2a1b10;
       padding: 1.5rem;
       border-radius: 12px;
       overflow-x: auto;
+      box-shadow: inset 0 -8px 0 #1a120b;
     }
 
     .libro {
       writing-mode: vertical-rl;
       background: linear-gradient(180deg, #7b4a1f, #4a2c12);
       color: #f1e4c3;
-      padding: 1rem 0.5rem;
+      padding: 1rem .5rem;
       height: 180px;
       width: 40px;
+      font-size: .85rem;
       text-align: center;
+      border-radius: 6px 6px 2px 2px;
       cursor: pointer;
+      box-shadow: 0 6px 12px rgba(0,0,0,.4);
+      transition: transform .3s, background .3s;
+    }
+
+    .libro:hover {
+      transform: translateY(-10px);
+      background: linear-gradient(180deg, #c9a35d, #8a5a2b);
+      color: #2b1d12;
     }
 
     footer {
       text-align: center;
       padding: 1.5rem;
       background: #1a120b;
-      font-size: 0.85rem;
-      opacity: 0.8;
+      font-size: .85rem;
+      opacity: .8;
+    }
+
+    .globo {
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    .globo span {
+      display: inline-block;
+      padding: 1rem 2rem;
+      border: 2px solid #c9a35d;
+      border-radius: 50px;
+      font-style: italic;
+    }
+
+    /* MODAL */
+    #modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.85);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
     }
   </style>
 
   <script>
-    let libroActual = null;
-    let vista = null;
+    let libroActual;
+    let vista;
 
     function cargarEpub(input) {
       const archivo = input.files[0];
       if (!archivo) return;
 
       document.getElementById("modal").style.display = "flex";
+      document.getElementById("lector").innerHTML = "";
 
-      const lector = document.getElementById("lector");
-      lector.innerHTML = "Cargando libro...";
-
-      const url = URL.createObjectURL(archivo);
-
-      libroActual = ePub(url);
-
+      libroActual = ePub(archivo);
       vista = libroActual.renderTo("lector", {
         width: "100%",
-        height: "70vh"
+        height: "600px"
       });
+      vista.display();
+    }
 
-      libroActual.loaded.spine.then(() => {
-        vista.display();
-      }).catch(err => {
-        lector.innerHTML = "Error al cargar EPUB";
-        console.error(err);
-      });
+    function abrirLector() {
+      if (!libroActual) {
+        alert("Primero carga un archivo EPUB");
+        return;
+      }
+      document.getElementById("modal").style.display = "flex";
     }
 
     function cerrarLector() {
       document.getElementById("modal").style.display = "none";
-      document.getElementById("lector").innerHTML = "";
-
-      if (libroActual) {
-        libroActual.destroy();
-        libroActual = null;
-        vista = null;
-      }
-    }
-
-    function siguiente() {
-      if (vista) vista.next();
-    }
-
-    function anterior() {
-      if (vista) vista.prev();
     }
   </script>
 </head>
@@ -125,41 +153,54 @@
 </header>
 
 <main>
-  <label>Cargar libro EPUB:</label><br>
-  <input type="file" accept=".epub" onchange="cargarEpub(this)">
+
+  <div style="margin-bottom:2rem;">
+    <label style="font-style:italic;">Cargar libro EPUB:</label><br>
+    <input type="file" accept=".epub" onchange="cargarEpub(this)">
+  </div>
+
+  <section class="biblioteca">
+
+    <div class="estante">
+      <h2>Romance</h2>
+      <div class="libros">
+        <div class="libro" onclick="abrirLector()">Romance oscuro</div>
+        <div class="libro" onclick="abrirLector()">Belleza oscura</div>
+        <div class="libro" onclick="abrirLector()">Amor tóxico</div>
+        <div class="libro" onclick="abrirLector()">Deseo prohibido</div>
+      </div>
+    </div>
+
+    <div class="estante">
+      <h2>Fantasía</h2>
+      <div class="libros">
+        <div class="libro" onclick="abrirLector()">Magia</div>
+        <div class="libro" onclick="abrirLector()">Reinos</div>
+        <div class="libro" onclick="abrirLector()">Dragones</div>
+        <div class="libro" onclick="abrirLector()">Leyendas</div>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="globo">
+    <span>“Camina, observa y elige el conocimiento que buscas”</span>
+  </div>
+
 </main>
 
 <footer>
-  © 2026 Biblioteca Clásica
+  © 2026 Biblioteca Clásica · Proyecto personal
 </footer>
 
-<div id="modal" style="
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.85);
-  justify-content:center;
-  align-items:center;
-  z-index:999;
-">
-  <div style="
-    background:#ffffff;
-    width:80%;
-    max-width:900px;
-    padding:1rem;
-    border-radius:12px;
-    color:#000;
-  ">
-    <button onclick="cerrarLector()">Cerrar</button>
-    <button onclick="anterior()">◀</button>
-    <button onclick="siguiente()">▶</button>
-
-    <div id="lector"
-         style="margin-top:1rem;height:70vh;overflow:hidden;">
-    </div>
+<div id="modal">
+  <div style="background:#1a120b;width:80%;max-width:900px;padding:1rem;border-radius:12px;">
+    <button onclick="cerrarLector()" style="float:right;background:#c9a35d;border:none;padding:.5rem 1rem;cursor:pointer;">
+      Cerrar
+    </button>
+    <div id="lector" style="margin-top:2rem;"></div>
   </div>
 </div>
 
 </body>
 </html>
-
