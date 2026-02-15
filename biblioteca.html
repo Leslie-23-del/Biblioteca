@@ -7,6 +7,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap" rel="stylesheet">
 
+<!-- ePub.js -->
 <script src="https://unpkg.com/epubjs@0.3.93/dist/epub.min.js"></script>
 
 <style>
@@ -30,14 +31,21 @@ body {
 <script>
 window.onload = function() {
 
-  var book = ePub("1. Belleza oscura Poder y oscuridad_Jessica Rivas.fg.epub");
+  fetch("1. Belleza oscura Poder y oscuridad_Jessica Rivas.fg.epub")
+    .then(response => response.arrayBuffer())
+    .then(buffer => {
 
-  var rendition = book.renderTo("viewer", {
-    width: "100%",
-    height: "100%"
-  });
+      var book = ePub(buffer);
 
-  rendition.display();
+      var rendition = book.renderTo("viewer", {
+        width: "100%",
+        height: "100%"
+      });
+
+      rendition.display();
+
+    })
+    .catch(error => console.error("Error cargando EPUB:", error));
 
 };
 </script>
