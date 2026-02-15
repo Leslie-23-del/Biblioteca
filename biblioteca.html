@@ -37,26 +37,6 @@
       margin: auto;
     }
 
-    .libros {
-      display: flex;
-      gap: 10px;
-      background: #2a1b10;
-      padding: 1.5rem;
-      border-radius: 12px;
-      overflow-x: auto;
-    }
-
-    .libro {
-      writing-mode: vertical-rl;
-      background: linear-gradient(180deg, #7b4a1f, #4a2c12);
-      color: #f1e4c3;
-      padding: 1rem 0.5rem;
-      height: 180px;
-      width: 40px;
-      text-align: center;
-      cursor: pointer;
-    }
-
     footer {
       text-align: center;
       padding: 1.5rem;
@@ -75,25 +55,35 @@
       if (!archivo) return;
 
       document.getElementById("modal").style.display = "flex";
-
       const lector = document.getElementById("lector");
       lector.innerHTML = "Cargando libro...";
 
-      const url = URL.createObjectURL(archivo);
+      const reader = new FileReader();
 
-      libroActual = ePub(url);
+      reader.onload = function(e) {
+        const arrayBuffer = e.target.result;
 
-      vista = libroActual.renderTo("lector", {
-        width: "100%",
-        height: "70vh"
-      });
+        libroActual = ePub(arrayBuffer);
 
-      libroActual.loaded.spine.then(() => {
-        vista.display();
-      }).catch(err => {
-        lector.innerHTML = "Error al cargar EPUB";
-        console.error(err);
-      });
+        vista = libroActual.renderTo("lector", {
+          width: "100%",
+          height: "100%",
+          spread: "none"
+        });
+
+        vista.display().then(() => {
+          console.log("Libro cargado correctamente");
+        }).catch(err => {
+          lector.innerHTML = "Error al mostrar el libro";
+          console.error(err);
+        });
+      };
+
+      reader.onerror = function() {
+        lector.innerHTML = "Error al leer el archivo EPUB";
+      };
+
+      reader.readAsArrayBuffer(archivo);
     }
 
     function cerrarLector() {
@@ -162,3 +152,5 @@
 
 </body>
 </html>
+
+
