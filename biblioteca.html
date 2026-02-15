@@ -7,8 +7,6 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Libre+Baskerville&display=swap" rel="stylesheet">
 
-  <script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
-
   <style>
     body {
       margin: 0;
@@ -29,11 +27,6 @@
       font-size: 2.8rem;
       margin: 0;
       color: #f1e4c3;
-    }
-
-    header p {
-      margin-top: .5rem;
-      opacity: .9;
     }
 
     main {
@@ -99,50 +92,7 @@
       border-radius: 50px;
       font-style: italic;
     }
-
-    /* MODAL */
-    #modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.85);
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-    }
   </style>
-
-  <script>
-    let libroActual;
-    let vista;
-
-    function cargarEpub(input) {
-      const archivo = input.files[0];
-      if (!archivo) return;
-
-      document.getElementById("modal").style.display = "flex";
-      document.getElementById("lector").innerHTML = "";
-
-      libroActual = ePub(archivo);
-      vista = libroActual.renderTo("lector", {
-        width: "100%",
-        height: "600px"
-      });
-      vista.display();
-    }
-
-    function abrirLector() {
-      if (!libroActual) {
-        alert("Primero carga un archivo EPUB");
-        return;
-      }
-      document.getElementById("modal").style.display = "flex";
-    }
-
-    function cerrarLector() {
-      document.getElementById("modal").style.display = "none";
-    }
-  </script>
 </head>
 
 <body>
@@ -154,30 +104,25 @@
 
 <main>
 
-  <div style="margin-bottom:2rem;">
-    <label style="font-style:italic;">Cargar libro EPUB:</label><br>
-    <input type="file" accept=".epub" onchange="cargarEpub(this)">
-  </div>
-
   <section class="biblioteca">
 
     <div class="estante">
       <h2>Romance</h2>
       <div class="libros">
-        <div class="libro" onclick="abrirLector()">Romance oscuro</div>
-        <div class="libro" onclick="abrirLector()">Belleza oscura</div>
-        <div class="libro" onclick="abrirLector()">Amor tóxico</div>
-        <div class="libro" onclick="abrirLector()">Deseo prohibido</div>
+        <div class="libro" onclick="window.open('lector.html','_blank')">Romance oscuro</div>
+        <div class="libro" onclick="window.open('lector.html','_blank')">Belleza oscura</div>
+        <div class="libro" onclick="window.open('lector.html','_blank')">Amor tóxico</div>
+        <div class="libro" onclick="window.open('lector.html','_blank')">Deseo prohibido</div>
       </div>
     </div>
 
     <div class="estante">
       <h2>Fantasía</h2>
       <div class="libros">
-        <div class="libro" onclick="abrirLector()">Magia</div>
-        <div class="libro" onclick="abrirLector()">Reinos</div>
-        <div class="libro" onclick="abrirLector()">Dragones</div>
-        <div class="libro" onclick="abrirLector()">Leyendas</div>
+        <div class="libro" onclick="window.open('lector.html','_blank')">Magia</div>
+        <div class="libro" onclick="window.open('lector.html','_blank')">Reinos</div>
+        <div class="libro" onclick="window.open('lector.html','_blank')">Dragones</div>
+        <div class="libro" onclick="window.open('lector.html','_blank')">Leyendas</div>
       </div>
     </div>
 
@@ -192,15 +137,6 @@
 <footer>
   © 2026 Biblioteca Clásica · Proyecto personal
 </footer>
-
-<div id="modal">
-  <div style="background:#1a120b;width:80%;max-width:900px;padding:1rem;border-radius:12px;">
-    <button onclick="cerrarLector()" style="float:right;background:#c9a35d;border:none;padding:.5rem 1rem;cursor:pointer;">
-      Cerrar
-    </button>
-    <div id="lector" style="margin-top:2rem;"></div>
-  </div>
-</div>
 
 </body>
 </html>
