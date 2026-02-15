@@ -92,6 +92,41 @@
       border-radius: 50px;
       font-style: italic;
     }
+
+    /* Sección subir PDF */
+    .subir-pdf {
+      margin-bottom: 3rem;
+      padding: 1.5rem;
+      background: #2a1b10;
+      border-radius: 12px;
+      border: 2px solid #c9a35d;
+      text-align: center;
+    }
+
+    .subir-pdf h2 {
+      font-family: 'Playfair Display', serif;
+      color: #e6d3a3;
+    }
+
+    input[type="file"] {
+      margin-top: 1rem;
+      padding: .5rem;
+      background: #c9a35d;
+      border: none;
+      cursor: pointer;
+    }
+
+    #visorPDF {
+      display: none;
+      margin-top: 2rem;
+    }
+
+    #visorPDF iframe {
+      width: 100%;
+      height: 80vh;
+      border: none;
+      border-radius: 12px;
+    }
   </style>
 </head>
 
@@ -104,25 +139,36 @@
 
 <main>
 
+  <!-- APARTADO SUBIR PDF -->
+  <div class="subir-pdf">
+    <h2>Subir archivo PDF</h2>
+    <input type="file" accept="application/pdf" onchange="cargarPDF(this)">
+  </div>
+
+  <!-- VISOR PDF -->
+  <div id="visorPDF">
+    <iframe id="pdfFrame"></iframe>
+  </div>
+
   <section class="biblioteca">
 
     <div class="estante">
       <h2>Romance</h2>
       <div class="libros">
-        <div class="libro" onclick="window.open('lector.html','_blank')">Romance oscuro</div>
-        <div class="libro" onclick="window.open('lector.html','_blank')">Belleza oscura</div>
-        <div class="libro" onclick="window.open('lector.html','_blank')">Amor tóxico</div>
-        <div class="libro" onclick="window.open('lector.html','_blank')">Deseo prohibido</div>
+        <div class="libro">Romance oscuro</div>
+        <div class="libro">Belleza oscura</div>
+        <div class="libro">Amor tóxico</div>
+        <div class="libro">Deseo prohibido</div>
       </div>
     </div>
 
     <div class="estante">
       <h2>Fantasía</h2>
       <div class="libros">
-        <div class="libro" onclick="window.open('lector.html','_blank')">Magia</div>
-        <div class="libro" onclick="window.open('lector.html','_blank')">Reinos</div>
-        <div class="libro" onclick="window.open('lector.html','_blank')">Dragones</div>
-        <div class="libro" onclick="window.open('lector.html','_blank')">Leyendas</div>
+        <div class="libro">Magia</div>
+        <div class="libro">Reinos</div>
+        <div class="libro">Dragones</div>
+        <div class="libro">Leyendas</div>
       </div>
     </div>
 
@@ -137,6 +183,18 @@
 <footer>
   © 2026 Biblioteca Clásica · Proyecto personal
 </footer>
+
+<script>
+function cargarPDF(input){
+  const archivo = input.files[0];
+  if(!archivo) return;
+
+  const url = URL.createObjectURL(archivo);
+
+  document.getElementById("visorPDF").style.display = "block";
+  document.getElementById("pdfFrame").src = url;
+}
+</script>
 
 </body>
 </html>
