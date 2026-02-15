@@ -170,7 +170,7 @@ function renderizar(){
       divLibro.textContent = libro.nombre;
       divLibro.onclick = ()=>{
         localStorage.setItem("pdfSeleccionado", libro.url);
-        window.open("lector.html", "_blank");
+        window.open("./lector.html", "_blank");
       };
       divLibros.appendChild(divLibro);
     });
